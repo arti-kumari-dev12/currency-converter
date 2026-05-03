@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <h3> Currency Converter</h3>
+    </nav>
+
+    <div class="card">
+
+        <h2>Convert Currency</h2>
+
+        <input type="number" id="amount" placeholder="Enter amount">
+
+        <select id="from">
+            <option>USD</option>
+            <option>INR</option>
+            <option>EUR</option>
+        </select>
+
+        <button onclick="swap()">⇅ Swap</button>
+
+        <select id="to">
+            <option>INR</option>
+            <option>USD</option>
+            <option>EUR</option>
+        </select>
+
+        <button onclick="convert()">Convert</button>
+
+        <h2 class="result" id="result"></h2>
+
+        <hr>
+
+        <h3> History</h3>
+        <div id="history"></div>
+
+        <button onclick="clearHistory()">Clear History</button>
+
+    </div>
+
+    <script>
+        async function convert() {
+            let amount = document.getElementById("amount").value;
+            let from = document.getElementById("from").value;
+            let to = document.getElementById("to").value;
+
+            let res = await fetch(`http://localhost:5000/convert?from=${from}&to=${to}&amount=${amount}`);
+            let data = await res.json();
+
+            let text = `${amount} ${from} = ${data.result} ${to}`;
+
+            document.getElementById("result").innerText = text;
+
+            // save history
+            let history = JSON.parse(localStorage.getItem("history")) || [];
+            history.push(text);
+            localStorage.setItem("history", JSON.stringify(history));
+
+            showHistory();
+        }
+
+        function showHistory() {
+            let history = JSON.parse(localStorage.getItem("history")) || [];
+            document.getElementById("history").innerHTML =
+                history.map(h => `<p>${h}</p>`).join("");
+        }
+
+        function clearHistory() {
+            localStorage.removeItem("history");
+            showHistory();
+        }
+
+        function swap() {
+            let f = document.getElementById("from");
+            let t = document.getElementById("to");
+            [f.value, t.value] = [t.value, f.value];
+        }
+
+        showHistory();
+    </script>
+
+</body>
+
+</html>

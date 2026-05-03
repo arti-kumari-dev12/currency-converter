@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Live Rates</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav>
+        <a href="index.html">💱 Converter</a>
+        <a href="history.html">📜 History</a>
+        <a href="rates.html">📊 Rates</a>
+    </nav>
+    <nav>
+        <a href="index.html">💱 Converter</a>
+        <a href="history.html">📜 History</a>
+        <a href="rates.html">📊 Rates</a>
+    </nav>
+
+    <h1>📊 Live Currency Rates</h1>
+
+    <button onclick="loadRates()">🔄 Refresh</button>
+
+    <table border="1" style="margin:auto; margin-top:20px; width:300px; color:white;">
+        <tr>
+            <th>Currency</th>
+            <th>Rate (INR)</th>
+        </tr>
+        <tbody id="rates"></tbody>
+    </table>
+
+    <script>
+        async function loadRates() {
+
+            let res = await fetch("https://api.frankfurter.app/latest?from=USD");
+            let data = await res.json();
+
+            let rates = data.rates;
+
+            document.getElementById("rates").innerHTML = `
+    <tr><td>USD</td><td>1</td></tr>
+    <tr><td>EUR</td><td>${rates.EUR}</td></tr>
+    <tr><td>INR</td><td>${rates.INR}</td></tr>
+  `;
+        }
+
+        loadRates();
+    </script>
+
+</body>
+
+</html>
